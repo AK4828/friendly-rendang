@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Meruvian Book</string>
+    <string name="action_settings">Settings</string>
+    <string name="home">Home</string>
+    <string name="setting">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="ic_keyboard_arrow_down">&#xe0c5;</string>
+    <string name="ic_keyboard_arrow_left">&#xe0c6;</string>
+    <string name="ic_keyboard_arrow_right">&#xe0c7;</string>
+    <string name="ic_keyboard_arrow_up">&#xe0c8;</string>
+    <string name="ic_folder">&#xe09d;</string>
+    <string name="ic_email">&#xe087;</string>
+
+    <string-array name="nav_drawer_items">
+        <item>@string/home</item>
+        <item>@string/setting</item>
+        <item>@string/logout</item>
+    </string-array>
+
+    <array name="nav_drawer_icons">
+        <item>fa_home</item>
+        <item>fa_gears</item>
+        <item>fa_sign_out</item>
+    </array>
+</resources>
