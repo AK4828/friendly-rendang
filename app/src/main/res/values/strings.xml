@@ -10,6 +10,7 @@
     <string name="ic_keyboard_arrow_up">&#xe0c8;</string>
     <string name="ic_folder">&#xe09d;</string>
     <string name="ic_email">&#xe087;</string>
+    <string name="ic_drive_file">&#xe077;</string>
 
     <string-array name="nav_drawer_items">
         <item>@string/home</item>

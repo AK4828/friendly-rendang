@@ -53,4 +53,7 @@ dependencies {
     compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
     compile 'com.github.bmelnychuk:atv:1.2.+'
     compile 'com.github.johnkil.print:print:1.2.2'
+    compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'de.greenrobot:greendao:2.0.0'
 }

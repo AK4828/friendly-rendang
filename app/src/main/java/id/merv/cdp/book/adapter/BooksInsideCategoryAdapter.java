@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import id.merv.cdp.book.entity.Book;
 import com.meruvian.dnabook.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -16,17 +15,18 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.merv.cdp.book.entity.Book;
 
 /**
- * Created by akm on 19/11/15.
+ * Created by akm on 18/12/15.
  */
-public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHolder> {
+public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInsideCategoryAdapter.ViewHolder> {
 
     private Context context;
     List<Book> bookList = new ArrayList<>();
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public BookGridAdapter(Context context) {
+    public BooksInsideCategoryAdapter(Context context) {
         this.context = context;
 
         if (!imageLoader.isInited()) {
@@ -59,13 +59,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         book.setBookThumbnail(R.drawable.ssssss);
         book.setBookDescription("IDR 50.000");
         bookList.add(book);
-
-
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.downloaded_book_inner_fragment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.choosed_book_category_inner_fragment, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
 
         return viewHolder;
@@ -78,12 +76,10 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         holder.bookThumbnail.setImageResource(books.getBookThumbnail());
         holder.bookPrice.setText(books.getBookDescription());
 
-
     }
 
     @Override
     public int getItemCount() {
-
         return bookList.size();
     }
 
@@ -95,10 +91,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
-            bookTitle = (TextView) itemView.findViewById(R.id.card_title);
-            bookThumbnail = (ImageView) itemView.findViewById(R.id.card_image);
-            bookPrice = (TextView) itemView.findViewById(R.id.card_price);
+            bookTitle = (TextView) itemView.findViewById(R.id.book_title);
+            bookThumbnail = (ImageView) itemView.findViewById(R.id.book_thumbnail);
+            bookPrice = (TextView) itemView.findViewById(R.id.book_description);
         }
     }
 }
-

@@ -7,16 +7,16 @@ public class Book {
 
     private String bookTitle;
     private int bookThumbnail;
-    private String bookPrice;
+    private String bookDescription;
 
 
 
-    public String getBookPrice() {
-        return bookPrice;
+    public String getBookDescription() {
+        return bookDescription;
     }
 
-    public void setBookPrice(String bookPrice) {
-        this.bookPrice = bookPrice;
+    public void setBookDescription(String bookDescription) {
+        this.bookDescription = bookDescription;
     }
 
     public String getBookTitle() {

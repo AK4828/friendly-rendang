@@ -2,12 +2,14 @@ package id.merv.cdp.book;
 
 import android.app.Application;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import retrofit.JacksonConverterFactory;
 import retrofit.Retrofit;
@@ -32,17 +34,21 @@ public class MeruvianBookApplication extends Application {
         super.onCreate();
         Iconify.with(new FontAwesomeModule());
 
-//        objectMapper = new ObjectMapper();
-//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        configureJobManager();
-//        configureRestAdaper();
+        objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        configureJobManager();
+        configureRestAdaper();
     }
 
     private void configureRestAdaper() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient();
+        client.interceptors().add(logging);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://demo.merv.id")
+                .baseUrl("http://192.168.2.109:8080")
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .build();

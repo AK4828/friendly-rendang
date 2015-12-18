@@ -8,18 +8,33 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import id.merv.cdp.book.MeruvianBookApplication;
+
+import com.github.johnkil.print.PrintView;
 import com.meruvian.dnabook.R;
+
+import id.merv.cdp.book.entity.Categories;
+import id.merv.cdp.book.entity.MainBody;
+import id.merv.cdp.book.fragment.ChoosedBookCategoryFragment;
 import id.merv.cdp.book.fragment.DownloadedBookFragment;
 import id.merv.cdp.book.fragment.FragmentUtils;
 import id.merv.cdp.book.holder.TreeViewHolder;
+import id.merv.cdp.book.service.CategoriesService;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,13 +42,20 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private MainBody<Categories> mainBody;
+    private ViewGroup viewGroup;
+    private CategoriesService service;
+    private PrintView arrowView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MeruvianBookApplication application = MeruvianBookApplication.getInstance();
-        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.container_nav_view);
+        Retrofit retrofit = MeruvianBookApplication.getInstance().getRetrofit();
+        service = retrofit.create(CategoriesService.class);
+        viewGroup = (ViewGroup) findViewById(R.id.container_nav_view);
+        arrowView = (PrintView) findViewById(R.id.arrow_icon);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -48,47 +70,88 @@ public class MainActivity extends AppCompatActivity {
             FragmentUtils.replaceFragment(getSupportFragmentManager(), DownloadedBookFragment.newInstance(), false);
         }
 
-        TreeNode root = TreeNode.root();
-//        TreeNode computerRoot = new TreeNode("My Computer");
-        TreeNode computerRoot = new TreeNode(new TreeViewHolder.TreeviewItem("JENI"));
+        try {
+            Call<MainBody<Categories>> getParentCategories = service.getParentNameCategory();
 
-        TreeNode myDocuments = new TreeNode(new TreeViewHolder.TreeviewItem("JENI 1"));
-        TreeNode downloads = new TreeNode(new TreeViewHolder.TreeviewItem("Pemrograman Dasar"));
-        TreeNode file1 = new TreeNode(new TreeViewHolder.TreeviewItem("My Documents"));
-        TreeNode file2 = new TreeNode(new TreeViewHolder.TreeviewItem("My Documents"));
-        TreeNode file3 = new TreeNode(new TreeViewHolder.TreeviewItem("My Documents"));
-        TreeNode file4 = new TreeNode(new TreeViewHolder.TreeviewItem("My Documents"));
-        downloads.addChildren(file1, file2, file3, file4);
+            getParentCategories.enqueue(new Callback<MainBody<Categories>>() {
+                @Override
+                public void onResponse(Response<MainBody<Categories>> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        mainBody = response.body();
+                        final List<Categories> categoryNames = mainBody.getContent();
+                        for (int i = 0; i < categoryNames.size(); i++) {
+                            String getCategoryNames = categoryNames.get(i).getName();
 
-        TreeNode myMedia = new TreeNode(new TreeViewHolder.TreeviewItem("JENI 2"));
-        TreeNode photo1 = new TreeNode(new TreeViewHolder.TreeviewItem("My Documents"));
-        TreeNode photo2 = new TreeNode(new TreeViewHolder.TreeviewItem("My Documents"));
-        TreeNode photo3 = new TreeNode(new TreeViewHolder.TreeviewItem("My Documents"));
-        myMedia.addChildren(photo1, photo2, photo3);
+                            TreeNode root = TreeNode.root();
+                            final TreeNode categoriesRoot = new TreeNode(new TreeViewHolder.TreeviewItem(getCategoryNames));
+                            root.addChildren(categoriesRoot);
 
-        myDocuments.addChild(downloads);
-        computerRoot.addChildren(myDocuments, myMedia);
+                            String getCategoryId = categoryNames.get(i).getId();
+                            getSubCategories(getCategoryId, categoriesRoot);
 
-        root.addChildren(computerRoot);
+                            AndroidTreeView treeView = new AndroidTreeView(MainActivity.this, root);
+                            treeView.setDefaultAnimation(true);
+                            treeView.setDefaultViewHolder(TreeViewHolder.class);
+                            treeView.setDefaultNodeClickListener(nodeClickListener);
 
-        AndroidTreeView treeView = new AndroidTreeView(this, root);
-        treeView.setDefaultAnimation(true);
-        treeView.setDefaultViewHolder(TreeViewHolder.class);
+                            viewGroup.addView(treeView.getView());
+                        }
+                    }
+                }
 
-        viewGroup.addView(treeView.getView());
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.d("Error", t.getMessage());
 
-//        if (savedInstanceState != null) {
-//            String state = savedInstanceState.getString("tState");
-//            if (!TextUtils.isEmpty(state)) {
-//                treeView.restoreState(state);
-//            }
-//        }
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e("error", e.getMessage());
+        }
     }
+
+    private void getSubCategories(String parentId, final TreeNode parentNode) {
+        Call<MainBody<Categories>> getChildCategories = service.getChildNameCategories(parentId);
+        getChildCategories.enqueue(new Callback<MainBody<Categories>>() {
+            @Override
+            public void onResponse(Response<MainBody<Categories>> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    mainBody = response.body();
+
+                    if (mainBody.getTotalElements() < 1) {
+//                        parentNode.set
+                    }
+
+                    for (Categories c : mainBody.getContent()) {
+                        TreeNode categoriesChild = new TreeNode(new TreeViewHolder.TreeviewItem(c.getName()));
+                        parentNode.addChildren(categoriesChild);
+                        if (c.getId().isEmpty()) {
+                            arrowView.setIconText(R.string.ic_drive_file);
+                        }
+                        getSubCategories(c.getId(), categoriesChild);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+    private TreeNode.TreeNodeClickListener nodeClickListener = new TreeNode.TreeNodeClickListener() {
+        @Override
+        public void onClick(TreeNode node, Object value) {
+            TreeViewHolder.TreeviewItem item = (TreeViewHolder.TreeviewItem) value;
+            FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedBookCategoryFragment.newInstance(), false);
+
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-
 
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -117,7 +180,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() <= 1) {
-            super.onBackPressed();
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+                finish();
+            }
         } else {
             getFragmentManager().popBackStack();
         }

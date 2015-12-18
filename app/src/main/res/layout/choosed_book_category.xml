@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D2D7D3">
+
+
+    <LinearLayout
+        android:id="@+id/choosed_category_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
+
+        <TextView
+            android:id="@+id/category_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:layout_marginBottom="3dp"
+            android:text="JENI 1"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/category_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_below="@id/category_title"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="Bab bab di dalam JENI 1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/book_inside_category"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#D2D7D3"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

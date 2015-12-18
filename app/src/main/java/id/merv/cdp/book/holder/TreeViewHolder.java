@@ -29,8 +29,6 @@ public class TreeViewHolder extends TreeNode.BaseNodeViewHolder<TreeViewHolder.T
         tvValue = (TextView) view.findViewById(R.id.node_value);
         tvValue.setText(value.text);
 
-        Log.d("cek", value.text);
-
         arrowView = (PrintView) view.findViewById(R.id.arrow_icon);
 
         return view;
