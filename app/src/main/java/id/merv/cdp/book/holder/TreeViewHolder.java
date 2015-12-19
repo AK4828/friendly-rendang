@@ -42,10 +42,11 @@ public class TreeViewHolder extends TreeNode.BaseNodeViewHolder<TreeViewHolder.T
 
     public static class TreeviewItem {
         public String text;
+        public String value;
 
-        public TreeviewItem(String text) {
+        public TreeviewItem(String text, String value) {
             this.text = text;
-
+            this.value = value;
         }
 
     }

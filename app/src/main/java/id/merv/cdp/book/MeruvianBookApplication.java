@@ -48,7 +48,7 @@ public class MeruvianBookApplication extends Application {
         client.interceptors().add(logging);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.109:8080")
+                .baseUrl("http://book.meruvian.org")
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .build();

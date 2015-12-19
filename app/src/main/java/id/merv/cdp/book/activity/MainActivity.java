@@ -21,6 +21,7 @@ import com.meruvian.dnabook.R;
 import id.merv.cdp.book.entity.Categories;
 import id.merv.cdp.book.entity.MainBody;
 import id.merv.cdp.book.fragment.ChoosedBookCategoryFragment;
+import id.merv.cdp.book.fragment.ChoosedCategoryBookDetailFragment;
 import id.merv.cdp.book.fragment.DownloadedBookFragment;
 import id.merv.cdp.book.fragment.FragmentUtils;
 import id.merv.cdp.book.holder.TreeViewHolder;
@@ -30,10 +31,10 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+import com.path.android.jobqueue.JobManager;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewGroup viewGroup;
     private CategoriesService service;
     private PrintView arrowView;
+    private JobManager jobManager;
+    private String getCategoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +82,12 @@ public class MainActivity extends AppCompatActivity {
                     if (response.isSuccess()) {
                         mainBody = response.body();
                         final List<Categories> categoryNames = mainBody.getContent();
-                        for (int i = 0; i < categoryNames.size(); i++) {
-                            String getCategoryNames = categoryNames.get(i).getName();
-
+                        for (Categories c : categoryNames) {
                             TreeNode root = TreeNode.root();
-                            final TreeNode categoriesRoot = new TreeNode(new TreeViewHolder.TreeviewItem(getCategoryNames));
+                            final TreeNode categoriesRoot = new TreeNode(new TreeViewHolder.TreeviewItem(c.getName(), c.getId()));
                             root.addChildren(categoriesRoot);
 
-                            String getCategoryId = categoryNames.get(i).getId();
-                            getSubCategories(getCategoryId, categoriesRoot);
+                            getSubCategories(c.getId(), categoriesRoot);
 
                             AndroidTreeView treeView = new AndroidTreeView(MainActivity.this, root);
                             treeView.setDefaultAnimation(true);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     for (Categories c : mainBody.getContent()) {
-                        TreeNode categoriesChild = new TreeNode(new TreeViewHolder.TreeviewItem(c.getName()));
+                        TreeNode categoriesChild = new TreeNode(new TreeViewHolder.TreeviewItem(c.getName(), c.getId()));
                         parentNode.addChildren(categoriesChild);
                         if (c.getId().isEmpty()) {
                             arrowView.setIconText(R.string.ic_drive_file);
@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
     private TreeNode.TreeNodeClickListener nodeClickListener = new TreeNode.TreeNodeClickListener() {
         @Override
         public void onClick(TreeNode node, Object value) {
-            TreeViewHolder.TreeviewItem item = (TreeViewHolder.TreeviewItem) value;
-            FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedBookCategoryFragment.newInstance(), false);
+            TreeViewHolder.TreeviewItem i = (TreeViewHolder.TreeviewItem) node.getValue();
+            FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedBookCategoryFragment.newInstance(i.value), false);
 
         }
     };
@@ -189,5 +189,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             getFragmentManager().popBackStack();
         }
+    }
+
+    public void getFragment(String id, String attachmentsId) {
+        Log.d("tes","sdsdsds");
+        FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedCategoryBookDetailFragment.newInstance(id, attachmentsId), false);
     }
 }

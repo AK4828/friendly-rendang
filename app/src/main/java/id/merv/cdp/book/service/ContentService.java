@@ -1,0 +1,30 @@
+package id.merv.cdp.book.service;
+
+import android.content.Entity;
+
+import java.util.Map;
+
+import id.merv.cdp.book.entity.Contents;
+import id.merv.cdp.book.entity.FileInfo;
+import id.merv.cdp.book.entity.MainBody;
+import retrofit.Call;
+import retrofit.http.GET;
+import retrofit.http.Path;
+import retrofit.http.QueryMap;
+
+/**
+ * Created by akm on 18/12/15.
+ */
+public interface ContentService {
+
+    @GET("/api/contents")
+    Call<MainBody<Contents>>getContentsById(@QueryMap Map<String, String> id);
+
+    @GET("/api/contents/{id}/thumbnail")
+    Call<MainBody<Contents>>getContentsImage(@Path("id")String image);
+
+    @GET("/api/contents/{id}/attachments")
+    Call<MainBody<FileInfo>>getContentsAttachment(@Path("id")String id);
+
+
+}

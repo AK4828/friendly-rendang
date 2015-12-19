@@ -33,32 +33,32 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        Book book = new Book();
-
-        book.setBookTitle("Sports");
-        book.setBookThumbnail(R.drawable.ssssss);
-        book.setBookDescription("IDR 50.000");
-        bookList.add(book);
-
-        book.setBookTitle("Sports");
-        book.setBookThumbnail(R.drawable.ssssss);
-        book.setBookDescription("IDR 50.000");
-        bookList.add(book);
-
-        book.setBookTitle("Sports");
-        book.setBookThumbnail(R.drawable.ssssss);
-        book.setBookDescription("IDR 50.000");
-        bookList.add(book);
-
-        book.setBookTitle("Sports");
-        book.setBookThumbnail(R.drawable.ssssss);
-        book.setBookDescription("IDR 50.000");
-        bookList.add(book);
-
-        book.setBookTitle("Sports");
-        book.setBookThumbnail(R.drawable.ssssss);
-        book.setBookDescription("IDR 50.000");
-        bookList.add(book);
+//        Book book = new Book();
+//
+//        book.setBookTitle("Sports");
+//        book.setBookThumbnail(R.drawable.ssssss);
+//        book.setBookDescription("IDR 50.000");
+//        bookList.add(book);
+//
+//        book.setBookTitle("Sports");
+//        book.setBookThumbnail(R.drawable.ssssss);
+//        book.setBookDescription("IDR 50.000");
+//        bookList.add(book);
+//
+//        book.setBookTitle("Sports");
+//        book.setBookThumbnail(R.drawable.ssssss);
+//        book.setBookDescription("IDR 50.000");
+//        bookList.add(book);
+//
+//        book.setBookTitle("Sports");
+//        book.setBookThumbnail(R.drawable.ssssss);
+//        book.setBookDescription("IDR 50.000");
+//        bookList.add(book);
+//
+//        book.setBookTitle("Sports");
+//        book.setBookThumbnail(R.drawable.ssssss);
+//        book.setBookDescription("IDR 50.000");
+//        bookList.add(book);
 
 
     }

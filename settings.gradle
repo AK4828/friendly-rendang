@@ -1,1 +1,1 @@
-include ':app', ':entitygenerator'
+include ':app',':entitygenerator2'

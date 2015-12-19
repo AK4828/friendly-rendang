@@ -17,4 +17,5 @@ public interface CategoriesService {
 
     @GET("/api/categories/{id}/categories")
     Call<MainBody<Categories>> getChildNameCategories(@Path("id") String parentId);
+
 }
