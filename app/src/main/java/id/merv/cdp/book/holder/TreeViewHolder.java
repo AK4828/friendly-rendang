@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.johnkil.print.PrintView;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.meruvian.dnabook.R;
 import com.unnamed.b.atv.model.TreeNode;
 

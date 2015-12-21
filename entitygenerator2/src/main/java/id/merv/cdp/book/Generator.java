@@ -11,8 +11,8 @@ public class Generator {
     public static void main(String... args) throws Exception {
         Schema schema = new Schema(1, "id.merv.cdp.book.entity");
         schema.enableKeepSectionsByDefault();
-        Entity fileInfo = addFileInfo(schema);
-        Entity document = addDocument(schema, fileInfo);
+        Entity media = addMedia(schema);
+        Entity document = addDocument(schema, media);
 
         DaoGenerator daoGenerator = new DaoGenerator();
         daoGenerator.generateAll(schema, "app/src/main/java");
@@ -34,8 +34,9 @@ public class Generator {
         return entity;
     }
 
-    private static Entity addFileInfo(Schema schema) {
-        Entity entity = addDefaultPersistence(schema.addEntity("FileInfo"));
+
+    private static Entity addMedia(Schema schema) {
+        Entity entity = addDefaultPersistence(schema.addEntity("Media"));
         entity.addStringProperty("originalName");
         entity.addStringProperty("contentType");
         entity.addStringProperty("path");
@@ -46,7 +47,7 @@ public class Generator {
 
     private static Entity addDocument(Schema schema, Entity fileInfo) {
         Entity entity = addDefaultPersistence(schema.addEntity("Document"));
-        entity.addToOne(fileInfo, entity.addLongProperty("fileInfoId").getProperty());
+        entity.addToOne(fileInfo, entity.addLongProperty("mediaId").getProperty());
         entity.addStringProperty("subject");
         entity.addStringProperty("description");
         entity.addStringProperty("content");
@@ -54,6 +55,7 @@ public class Generator {
         entity.addStringProperty("contentType");
         entity.addStringProperty("status");
         entity.addStringProperty("sha256Hash");
+        entity.addStringProperty("path");
 
         return entity;
     }

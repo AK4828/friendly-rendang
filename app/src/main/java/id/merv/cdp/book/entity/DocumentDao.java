@@ -35,7 +35,7 @@ public class DocumentDao extends AbstractDao<Document, Long> {
         public final static Property Id = new Property(6, String.class, "id", false, "REF_ID");
         public final static Property RefCreateDate = new Property(7, java.util.Date.class, "refCreateDate", false, "REF_CREATE_DATE");
         public final static Property RefCreateBy = new Property(8, String.class, "refCreateBy", false, "REF_CREATE_BY");
-        public final static Property FileInfoId = new Property(9, Long.class, "fileInfoId", false, "FILE_INFO_ID");
+        public final static Property MediaId = new Property(9, Long.class, "mediaId", false, "MEDIA_ID");
         public final static Property Subject = new Property(10, String.class, "subject", false, "SUBJECT");
         public final static Property Description = new Property(11, String.class, "description", false, "DESCRIPTION");
         public final static Property Content = new Property(12, String.class, "content", false, "CONTENT");
@@ -43,6 +43,7 @@ public class DocumentDao extends AbstractDao<Document, Long> {
         public final static Property ContentType = new Property(14, String.class, "contentType", false, "CONTENT_TYPE");
         public final static Property Status = new Property(15, String.class, "status", false, "STATUS");
         public final static Property Sha256Hash = new Property(16, String.class, "sha256Hash", false, "SHA256_HASH");
+        public final static Property Path = new Property(17, String.class, "path", false, "PATH");
     };
 
     private DaoSession daoSession;
@@ -70,14 +71,15 @@ public class DocumentDao extends AbstractDao<Document, Long> {
                 "\"REF_ID\" TEXT," + // 6: id
                 "\"REF_CREATE_DATE\" INTEGER," + // 7: refCreateDate
                 "\"REF_CREATE_BY\" TEXT," + // 8: refCreateBy
-                "\"FILE_INFO_ID\" INTEGER," + // 9: fileInfoId
+                "\"MEDIA_ID\" INTEGER," + // 9: mediaId
                 "\"SUBJECT\" TEXT," + // 10: subject
                 "\"DESCRIPTION\" TEXT," + // 11: description
                 "\"CONTENT\" TEXT," + // 12: content
                 "\"PROPERTIES\" TEXT," + // 13: properties
                 "\"CONTENT_TYPE\" TEXT," + // 14: contentType
                 "\"STATUS\" TEXT," + // 15: status
-                "\"SHA256_HASH\" TEXT);"); // 16: sha256Hash
+                "\"SHA256_HASH\" TEXT," + // 16: sha256Hash
+                "\"PATH\" TEXT);"); // 17: path
     }
 
     /** Drops the underlying database table. */
@@ -136,9 +138,9 @@ public class DocumentDao extends AbstractDao<Document, Long> {
             stmt.bindString(9, refCreateBy);
         }
  
-        Long fileInfoId = entity.getFileInfoId();
-        if (fileInfoId != null) {
-            stmt.bindLong(10, fileInfoId);
+        Long mediaId = entity.getMediaId();
+        if (mediaId != null) {
+            stmt.bindLong(10, mediaId);
         }
  
         String subject = entity.getSubject();
@@ -175,6 +177,11 @@ public class DocumentDao extends AbstractDao<Document, Long> {
         if (sha256Hash != null) {
             stmt.bindString(17, sha256Hash);
         }
+ 
+        String path = entity.getPath();
+        if (path != null) {
+            stmt.bindString(18, path);
+        }
     }
 
     @Override
@@ -202,14 +209,15 @@ public class DocumentDao extends AbstractDao<Document, Long> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // id
             cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // refCreateDate
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // refCreateBy
-            cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9), // fileInfoId
+            cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9), // mediaId
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // subject
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // description
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // content
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // properties
             cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // contentType
             cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // status
-            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // sha256Hash
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // sha256Hash
+            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17) // path
         );
         return entity;
     }
@@ -226,7 +234,7 @@ public class DocumentDao extends AbstractDao<Document, Long> {
         entity.setId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setRefCreateDate(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
         entity.setRefCreateBy(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setFileInfoId(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
+        entity.setMediaId(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
         entity.setSubject(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
         entity.setDescription(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setContent(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
@@ -234,6 +242,7 @@ public class DocumentDao extends AbstractDao<Document, Long> {
         entity.setContentType(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
         entity.setStatus(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
         entity.setSha256Hash(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
+        entity.setPath(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
      }
     
     /** @inheritdoc */
@@ -266,9 +275,9 @@ public class DocumentDao extends AbstractDao<Document, Long> {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getFileInfoDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T0", daoSession.getMediaDao().getAllColumns());
             builder.append(" FROM DOCUMENT T");
-            builder.append(" LEFT JOIN FILE_INFO T0 ON T.\"FILE_INFO_ID\"=T0.\"_id\"");
+            builder.append(" LEFT JOIN MEDIA T0 ON T.\"MEDIA_ID\"=T0.\"_id\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -279,8 +288,8 @@ public class DocumentDao extends AbstractDao<Document, Long> {
         Document entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
-        FileInfo fileInfo = loadCurrentOther(daoSession.getFileInfoDao(), cursor, offset);
-        entity.setFileInfo(fileInfo);
+        Media media = loadCurrentOther(daoSession.getMediaDao(), cursor, offset);
+        entity.setMedia(media);
 
         return entity;    
     }

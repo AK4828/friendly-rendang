@@ -56,4 +56,7 @@ dependencies {
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'de.greenrobot:greendao:2.0.0'
+    compile 'commons-io:commons-io:2.4'
+    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
 }

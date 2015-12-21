@@ -13,11 +13,16 @@ import android.widget.TextView;
 import com.meruvian.dnabook.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.path.android.jobqueue.JobManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import id.merv.cdp.book.MeruvianBookApplication;
+import id.merv.cdp.book.entity.Attachments;
+import id.merv.cdp.book.entity.Document;
 import id.merv.cdp.book.entity.FileInfo;
+import id.merv.cdp.book.job.AttahmentsDownloadJob;
 
 /**
  * Created by akm on 19/12/15.
@@ -25,11 +30,14 @@ import id.merv.cdp.book.entity.FileInfo;
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
 
     private Context context;
+    private long documentId;
     private ImageLoader imageLoader = ImageLoader.getInstance();
-    List<FileInfo> bookList = new ArrayList<FileInfo>();
+    List<Document> bookList = new ArrayList<Document>();
+    private JobManager jobManager;
 
-    public BookListAdapter(Context context) {
+    public BookListAdapter(Context context, Long documentId) {
         this.context = context;
+        this.documentId = documentId;
         if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
@@ -45,18 +53,33 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        FileInfo fileInfo = bookList.get(position);
-        holder.bookThumbnail.setImageResource(R.drawable.ssssss);
+        final Document documents = bookList.get(position);
+        holder.bookThumbnail.setImageResource(R.drawable.no_image);
+        holder.detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                jobManager = MeruvianBookApplication.getInstance().getJobManager();
+                jobManager.addJobInBackground(AttahmentsDownloadJob.newInstance(documents.getId(), documentId));
+
+            }
+        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
     }
+
 
     @Override
     public int getItemCount() {
         return bookList.size();
     }
 
-    public void addItem(FileInfo fileInfo) {
-        bookList.add(fileInfo);
+    public void addItem(Document attachments) {
+        bookList.add(attachments);
         notifyDataSetChanged();
     }
 
@@ -64,15 +87,13 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
         public TextView bookTitle;
         public ImageView bookThumbnail;
-        public TextView bookPrice;
-        public ImageButton detailButton;
+        public TextView detailButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
             bookTitle = (TextView) itemView.findViewById(R.id.book_title);
             bookThumbnail = (ImageView) itemView.findViewById(R.id.book_thumbnail);
-            bookPrice = (TextView) itemView.findViewById(R.id.book_description);
-            detailButton = (ImageButton) itemView.findViewById(R.id.detail_button);
+            detailButton = (TextView) itemView.findViewById(R.id.detail_button);
         }
     }
 }

@@ -191,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getFragment(String id, String attachmentsId) {
+    public void getFragment(String id, String attachmentsId, long documentId) {
         Log.d("tes","sdsdsds");
-        FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedCategoryBookDetailFragment.newInstance(id, attachmentsId), false);
+        FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedCategoryBookDetailFragment.newInstance(id, attachmentsId, documentId), false);
     }
 }

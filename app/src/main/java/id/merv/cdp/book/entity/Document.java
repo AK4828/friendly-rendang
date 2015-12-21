@@ -21,7 +21,7 @@ public class Document implements java.io.Serializable, LogInformationAware {
     private String id;
     private java.util.Date refCreateDate;
     private String refCreateBy;
-    private Long fileInfoId;
+    private Long mediaId;
     private String subject;
     private String description;
     private String content;
@@ -29,6 +29,7 @@ public class Document implements java.io.Serializable, LogInformationAware {
     private String contentType;
     private String status;
     private String sha256Hash;
+    private String path;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -36,8 +37,8 @@ public class Document implements java.io.Serializable, LogInformationAware {
     /** Used for active entity operations. */
     private transient DocumentDao myDao;
 
-    private FileInfo fileInfo;
-    private Long fileInfo__resolvedKey;
+    private Media media;
+    private Long media__resolvedKey;
 
 
     // KEEP FIELDS - put your custom fields here
@@ -50,7 +51,7 @@ public class Document implements java.io.Serializable, LogInformationAware {
         this.dbId = dbId;
     }
 
-    public Document(Long dbId, java.util.Date dbCreateDate, java.util.Date dbUpdateDate, String dbCreateBy, String dbUpdateBy, Integer dbActiveFlag, String id, java.util.Date refCreateDate, String refCreateBy, Long fileInfoId, String subject, String description, String content, String properties, String contentType, String status, String sha256Hash) {
+    public Document(Long dbId, java.util.Date dbCreateDate, java.util.Date dbUpdateDate, String dbCreateBy, String dbUpdateBy, Integer dbActiveFlag, String id, java.util.Date refCreateDate, String refCreateBy, Long mediaId, String subject, String description, String content, String properties, String contentType, String status, String sha256Hash, String path) {
         this.dbId = dbId;
         this.dbCreateDate = dbCreateDate;
         this.dbUpdateDate = dbUpdateDate;
@@ -60,7 +61,7 @@ public class Document implements java.io.Serializable, LogInformationAware {
         this.id = id;
         this.refCreateDate = refCreateDate;
         this.refCreateBy = refCreateBy;
-        this.fileInfoId = fileInfoId;
+        this.mediaId = mediaId;
         this.subject = subject;
         this.description = description;
         this.content = content;
@@ -68,6 +69,7 @@ public class Document implements java.io.Serializable, LogInformationAware {
         this.contentType = contentType;
         this.status = status;
         this.sha256Hash = sha256Hash;
+        this.path = path;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -148,12 +150,12 @@ public class Document implements java.io.Serializable, LogInformationAware {
         this.refCreateBy = refCreateBy;
     }
 
-    public Long getFileInfoId() {
-        return fileInfoId;
+    public Long getMediaId() {
+        return mediaId;
     }
 
-    public void setFileInfoId(Long fileInfoId) {
-        this.fileInfoId = fileInfoId;
+    public void setMediaId(Long mediaId) {
+        this.mediaId = mediaId;
     }
 
     public String getSubject() {
@@ -212,28 +214,36 @@ public class Document implements java.io.Serializable, LogInformationAware {
         this.sha256Hash = sha256Hash;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     /** To-one relationship, resolved on first access. */
-    public FileInfo getFileInfo() {
-        Long __key = this.fileInfoId;
-        if (fileInfo__resolvedKey == null || !fileInfo__resolvedKey.equals(__key)) {
+    public Media getMedia() {
+        Long __key = this.mediaId;
+        if (media__resolvedKey == null || !media__resolvedKey.equals(__key)) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            FileInfoDao targetDao = daoSession.getFileInfoDao();
-            FileInfo fileInfoNew = targetDao.load(__key);
+            MediaDao targetDao = daoSession.getMediaDao();
+            Media mediaNew = targetDao.load(__key);
             synchronized (this) {
-                fileInfo = fileInfoNew;
-            	fileInfo__resolvedKey = __key;
+                media = mediaNew;
+            	media__resolvedKey = __key;
             }
         }
-        return fileInfo;
+        return media;
     }
 
-    public void setFileInfo(FileInfo fileInfo) {
+    public void setMedia(Media media) {
         synchronized (this) {
-            this.fileInfo = fileInfo;
-            fileInfoId = fileInfo == null ? null : fileInfo.getDbId();
-            fileInfo__resolvedKey = fileInfoId;
+            this.media = media;
+            mediaId = media == null ? null : media.getDbId();
+            media__resolvedKey = mediaId;
         }
     }
 
@@ -263,8 +273,7 @@ public class Document implements java.io.Serializable, LogInformationAware {
 
     @Override
     public void setLogInformation(LogInformation logInformation) {
-        setRefCreateDate(logInformation.getCreateDate());
-        setRefCreateBy(logInformation.getCreateBy());
+
     }
 
     // KEEP METHODS - put your custom methods here

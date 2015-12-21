@@ -4,7 +4,9 @@ import android.content.Entity;
 
 import java.util.Map;
 
+import id.merv.cdp.book.entity.Attachments;
 import id.merv.cdp.book.entity.Contents;
+import id.merv.cdp.book.entity.Document;
 import id.merv.cdp.book.entity.FileInfo;
 import id.merv.cdp.book.entity.MainBody;
 import retrofit.Call;
@@ -24,7 +26,7 @@ public interface ContentService {
     Call<MainBody<Contents>>getContentsImage(@Path("id")String image);
 
     @GET("/api/contents/{id}/attachments")
-    Call<MainBody<FileInfo>>getContentsAttachment(@Path("id")String id);
+    Call<MainBody<Document>>getContentsAttachment(@Path("id")String id);
 
 
 }

@@ -11,21 +11,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.meruvian.dnabook.R;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import id.merv.cdp.book.MeruvianBookApplication;
 import id.merv.cdp.book.adapter.BooksInsideCategoryAdapter;
 import id.merv.cdp.book.entity.Contents;
+import id.merv.cdp.book.entity.Document;
+import id.merv.cdp.book.entity.DocumentDao;
 import id.merv.cdp.book.entity.MainBody;
 import id.merv.cdp.book.service.ContentService;
 import retrofit.Call;
@@ -64,6 +63,7 @@ public class ChoosedBookCategoryFragment extends Fragment {
 
         final String id = getArguments().getString("id");
         MeruvianBookApplication app = MeruvianBookApplication.getInstance();
+        final DocumentDao documentDao = app.getDaoSession().getDocumentDao();
         ContentService service = app.getRetrofit().create(ContentService.class);
 
         try {
@@ -80,7 +80,17 @@ public class ChoosedBookCategoryFragment extends Fragment {
                             contents.setTitle(s.getTitle());
                             Log.d("ID", s.getId());
 
-                            adapter = new BooksInsideCategoryAdapter(getActivity(), id , s.getId());
+                            Document document = new Document();
+
+                            document.setDbCreateDate(new Date());
+                            document.setId(s.getId());
+                            document.setSubject(s.getTitle());
+                            document.setDescription(s.getDescription());
+                            document.setPath("");
+
+                            documentDao.insert(document);
+
+                            adapter = new BooksInsideCategoryAdapter(getActivity(), id , s.getId(), document.getDbId());
                             booksRecycler.setHasFixedSize(true);
                             booksRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -106,25 +116,4 @@ public class ChoosedBookCategoryFragment extends Fragment {
         return view;
     }
 
-//    private void getContentsImage(String contentsID) {
-//        MeruvianBookApplication app = MeruvianBookApplication.getInstance();
-//        BooksInsideCategoryAdapter adapter = new BooksInsideCategoryAdapter(getActivity());
-//        ContentService service = app.getRetrofit().create(ContentService.class);
-//        Call<MainBody<Contents>>getContentsImage = service.getContentsImage(contentsID);
-//        getContentsImage.enqueue(new Callback<MainBody<Contents>>() {
-//            @Override
-//            public void onResponse(Response<MainBody<Contents>> response, Retrofit retrofit) {
-//                if (response.isSuccess()) {
-//                    mainBody = response.body();
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//
-//            }
-//        });
-//    }
 }

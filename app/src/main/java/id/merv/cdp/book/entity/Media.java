@@ -5,9 +5,9 @@ package id.merv.cdp.book.entity;
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
 /**
- * Entity mapped to table "FILE_INFO".
+ * Entity mapped to table "MEDIA".
  */
-public class FileInfo implements java.io.Serializable, LogInformationAware {
+public class Media implements java.io.Serializable, LogInformationAware {
 
     private Long dbId;
     private java.util.Date dbCreateDate;
@@ -26,14 +26,14 @@ public class FileInfo implements java.io.Serializable, LogInformationAware {
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
 
-    public FileInfo() {
+    public Media() {
     }
 
-    public FileInfo(Long dbId) {
+    public Media(Long dbId) {
         this.dbId = dbId;
     }
 
-    public FileInfo(Long dbId, java.util.Date dbCreateDate, java.util.Date dbUpdateDate, String dbCreateBy, String dbUpdateBy, Integer dbActiveFlag, String id, java.util.Date refCreateDate, String refCreateBy, String originalName, String contentType, String path, Long size) {
+    public Media(Long dbId, java.util.Date dbCreateDate, java.util.Date dbUpdateDate, String dbCreateBy, String dbUpdateBy, Integer dbActiveFlag, String id, java.util.Date refCreateDate, String refCreateBy, String originalName, String contentType, String path, Long size) {
         this.dbId = dbId;
         this.dbCreateDate = dbCreateDate;
         this.dbUpdateDate = dbUpdateDate;
