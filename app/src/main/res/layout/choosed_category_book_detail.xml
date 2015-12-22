@@ -63,13 +63,13 @@
             android:background="#EEEEEE"
             android:clickable="true" />
 
-        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        <ProgressBar
             android:id="@+id/downloading_progress"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:indeterminate="true"
-            app:mpb_progressStyle="horizontal"
-            style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:indeterminate="false"
             android:visibility="gone"/>
 
     </LinearLayout>

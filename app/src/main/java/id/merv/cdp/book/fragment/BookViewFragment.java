@@ -15,10 +15,12 @@ import android.print.pdf.PrintedPdfDocument;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.joanzapata.pdfview.PDFView;
@@ -43,9 +45,9 @@ import id.merv.cdp.book.entity.DocumentDao;
 /**
  * Created by akm on 19/12/15.
  */
-public class BookViewFragment extends Fragment {
+public class BookViewFragment extends Fragment{
     @Bind(R.id.pdfview) PDFView pdfView;
-//    @Bind(R.id.fab_sign) FloatingActionButton fab;
+    //    @Bind(R.id.fab_sign) FloatingActionButton fab;
     private JobManager jobManager;
 
     public static BookViewFragment newInstance(long id) {
@@ -100,7 +102,6 @@ public class BookViewFragment extends Fragment {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) ((dp * scale) + 0.5f);
     }
-
 //    public void printDocument (View view) {
 //        PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
 //        String jobName = this.getString(R.string.app_name) +

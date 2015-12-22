@@ -105,7 +105,6 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
         try {
             Map<String, String> param = new HashMap<>();
             param.put("category", id);
-            Log.d("caa", getArguments().getString("attachmentsId"));
             Call<MainBody<Contents>> getContentsByCategory = service.getContentsById(param);
             getContentsByCategory.enqueue(new Callback<MainBody<Contents>>() {
                 @Override
@@ -120,7 +119,6 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
 
                             ImageLoader imageLoader = ImageLoader.getInstance();
                             imageLoader.displayImage(imageUrl, categoryImage);
-                            Log.d("cekServImage", imageUrl);
                         }
                     }
                 }
@@ -128,12 +126,14 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
                 @Override
                 public void onFailure(Throwable t) {
                     Log.d("Error", t.getMessage());
+
                 }
             });
 
         }catch (Exception e) {
             e.printStackTrace();
         }
+
 
         try {
             String attachmentsId = getArguments().getString("attachmentsId");
@@ -172,7 +172,7 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
         }
         if (event.getStatus() == JobStatus.SUCCESS) {
             long attachmentsId = getArguments().getLong("documentId");
-            FragmentUtils.replaceFragment(getFragmentManager(), BookViewFragment.newInstance(attachmentsId),true);
+            FragmentUtils.replaceFragment(getFragmentManager(), BookViewFragment.newInstance(attachmentsId), true);
         }
     }
 

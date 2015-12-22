@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import id.merv.cdp.book.MeruvianBookApplication;
-import id.merv.cdp.book.entity.Attachments;
 import id.merv.cdp.book.entity.Document;
-import id.merv.cdp.book.entity.FileInfo;
 import id.merv.cdp.book.job.AttahmentsDownloadJob;
 
 /**
