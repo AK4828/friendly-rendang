@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentUtils.replaceFragment(getSupportFragmentManager(), DownloadedBookFragment.newInstance(), false);
         }
-        
+
         try {
             Call<MainBody<Categories>> getParentCategories = service.getParentNameCategory();
 
@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getFragment(String id, String attachmentsId, long documentId) {
-        Log.d("tes","sdsdsds");
-        FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedCategoryBookDetailFragment.newInstance(id, attachmentsId, documentId), true);
+    public void getFragment(String attachmentsId) {
+        FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedCategoryBookDetailFragment.newInstance(attachmentsId), true);
     }
+
 }

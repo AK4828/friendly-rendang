@@ -3,7 +3,8 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clickable="true">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -12,7 +13,6 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="9dp"
-        android:clickable="true"
         card_view:cardCornerRadius="3dp"
         card_view:cardElevation="3dp">
 
@@ -42,15 +42,6 @@
                     android:layout_marginLeft="5dp"
                     android:textSize="15dp"
                     android:layout_alignParentLeft="true"/>
-
-                <ImageView
-                    android:id="@+id/detail_button"
-                    android:layout_width="20dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_action_show8"
-                    android:clickable="true"
-                    />
 
             </RelativeLayout>
         </LinearLayout>

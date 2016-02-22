@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
@@ -36,15 +37,15 @@ import retrofit.Retrofit;
  */
 public class AttahmentsDownloadJob extends Job {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
     private String id;
-    private long documentid;
     private Document document;
+    private long dbId;
+    private String subject;
 
-    public static AttahmentsDownloadJob newInstance(String id, long documentId) {
+    public static AttahmentsDownloadJob newInstance(String id, String subject) {
         AttahmentsDownloadJob job = new AttahmentsDownloadJob();
         job.id = id;
-        job.documentid = documentId;
+        job.subject = subject;
 
         return job;
     }
@@ -55,7 +56,7 @@ public class AttahmentsDownloadJob extends Job {
 
     @Override
     public void onAdded() {
-        EventBus.getDefault().post(new AttachmentsDownloadEvent(JobStatus.ADDED));
+        EventBus.getDefault().post(new AttachmentsDownloadEvent(JobStatus.ADDED, dbId));
 
     }
 
@@ -79,14 +80,18 @@ public class AttahmentsDownloadJob extends Job {
                             IOUtils.copy(stream, outputStream);
                             IOUtils.closeQuietly(outputStream);
                             IOUtils.closeQuietly(stream);
-                            Log.d("cekId", outputFile.getAbsolutePath());
 
-                            Document document = documentDao.queryBuilder().where(DocumentDao.Properties.DbId.eq(documentid)).build().unique();
-                            Log.d("docuu", String.valueOf(document));
+                            Document document = new Document();
+
+                            document.setDbCreateDate(new Date());
+                            document.setId(id);
+                            document.setSubject(subject);
                             document.setPath(outputFile.getAbsolutePath());
-                            document.update();
 
-                            EventBus.getDefault().post(new AttachmentsDownloadEvent(JobStatus.SUCCESS));
+                            long id = documentDao.insert(document);
+
+
+                            EventBus.getDefault().post(new AttachmentsDownloadEvent(JobStatus.SUCCESS, id));
 
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -96,7 +101,7 @@ public class AttahmentsDownloadJob extends Job {
 
                 @Override
                 public void onFailure(Throwable t) {
-
+                    EventBus.getDefault().post(new AttachmentsDownloadEvent(JobStatus.SYSTEM_ERROR, dbId));
                 }
             });
 
@@ -107,6 +112,7 @@ public class AttahmentsDownloadJob extends Job {
 
     @Override
     protected void onCancel() {
+        EventBus.getDefault().post(new AttachmentsDownloadEvent(JobStatus.ABORTED, dbId));
 
     }
 
@@ -117,8 +123,10 @@ public class AttahmentsDownloadJob extends Job {
 
     public static class AttachmentsDownloadEvent {
         private int status;
+        private long dbId;
 
-        public AttachmentsDownloadEvent(int status) {
+        public AttachmentsDownloadEvent(int status, long dbId) {
+            this.dbId = dbId;
             this.status = status;
         }
 
@@ -128,6 +136,14 @@ public class AttahmentsDownloadJob extends Job {
 
         public void setStatus(int status) {
             this.status = status;
+        }
+
+        public long getDbId() {
+            return dbId;
+        }
+
+        public void setDbId(long dbId) {
+            this.dbId = dbId;
         }
     }
 }

@@ -40,7 +40,6 @@ public class ChoosedBookCategoryFragment extends Fragment {
     @Bind(R.id.book_inside_category) RecyclerView booksRecycler;
     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
     private MainBody<Contents> mainBody;
-    private  BooksInsideCategoryAdapter adapter;
 
     public static ChoosedBookCategoryFragment newInstance(String id) {
         ChoosedBookCategoryFragment fragment = new ChoosedBookCategoryFragment();
@@ -63,49 +62,37 @@ public class ChoosedBookCategoryFragment extends Fragment {
 
         final String id = getArguments().getString("id");
         MeruvianBookApplication app = MeruvianBookApplication.getInstance();
-        final DocumentDao documentDao = app.getDaoSession().getDocumentDao();
         ContentService service = app.getRetrofit().create(ContentService.class);
 
         try {
             Map<String, String> param = new HashMap<>();
-            param.put("category",id);
+            param.put("category", id);
             Call<MainBody<Contents>> getContentsByCategory = service.getContentsById(param);
             getContentsByCategory.enqueue(new Callback<MainBody<Contents>>() {
                 @Override
                 public void onResponse(Response<MainBody<Contents>> response, Retrofit retrofit) {
                     if (response.isSuccess()){
                         mainBody = response.body();
+                        BooksInsideCategoryAdapter adapter = new BooksInsideCategoryAdapter(getActivity());
+                        booksRecycler.setAdapter(adapter);
                         for (Contents s : mainBody.getContent()) {
                             Contents contents = new Contents();
+                            contents.setId(s.getId());
                             contents.setTitle(s.getTitle());
-                            Log.d("ID", s.getId());
 
-                            Document document = new Document();
-
-                            document.setDbCreateDate(new Date());
-                            document.setId(s.getId());
-                            document.setSubject(s.getTitle());
-                            document.setDescription(s.getDescription());
-                            document.setPath("");
-
-                            documentDao.insert(document);
-
-                            adapter = new BooksInsideCategoryAdapter(getActivity(), id , s.getId(), document.getDbId());
                             booksRecycler.setHasFixedSize(true);
                             booksRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-
                             layoutManager = new GridLayoutManager(getActivity(), 2);
                             booksRecycler.setLayoutManager(layoutManager);
-                            adapter.addItem(contents);
-                            booksRecycler.setAdapter(adapter);
 
+                            adapter.addItem(contents);
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Throwable t) {
-                    Log.d("Error", t.getMessage());
+
                 }
             });
 

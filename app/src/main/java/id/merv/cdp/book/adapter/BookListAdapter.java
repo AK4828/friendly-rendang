@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.meruvian.dnabook.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,14 +29,12 @@ import id.merv.cdp.book.job.AttahmentsDownloadJob;
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
 
     private Context context;
-    private long documentId;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     List<Document> bookList = new ArrayList<Document>();
     private JobManager jobManager;
 
-    public BookListAdapter(Context context, Long documentId) {
+    public BookListAdapter(Context context) {
         this.context = context;
-        this.documentId = documentId;
         if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
@@ -52,22 +51,17 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Document documents = bookList.get(position);
-        holder.bookThumbnail.setImageResource(R.drawable.no_image);
-        holder.detailButton.setOnClickListener(new View.OnClickListener() {
+        holder.bookTitle.setText(documents.getSubject());
+        String imageUrl = MeruvianBookApplication.SERVER_URL + "/api/attachments/" + documents.getId() + "/preview";
+        imageLoader.displayImage(imageUrl, holder.bookThumbnail);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 jobManager = MeruvianBookApplication.getInstance().getJobManager();
-                jobManager.addJobInBackground(AttahmentsDownloadJob.newInstance(documents.getId(), documentId));
-
+                jobManager.addJobInBackground(AttahmentsDownloadJob.newInstance(documents.getId(), documents.getSubject()));
             }
         });
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-
     }
 
 
@@ -76,8 +70,8 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         return bookList.size();
     }
 
-    public void addItem(Document attachments) {
-        bookList.add(attachments);
+    public void addItem(Document documents) {
+        bookList.add(documents);
         notifyDataSetChanged();
     }
 
@@ -85,13 +79,11 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
         public TextView bookTitle;
         public ImageView bookThumbnail;
-        public TextView detailButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            bookTitle = (TextView) itemView.findViewById(R.id.book_title);
+            bookTitle = (TextView) itemView.findViewById(R.id.listed_book_title);
             bookThumbnail = (ImageView) itemView.findViewById(R.id.book_thumbnail);
-            detailButton = (TextView) itemView.findViewById(R.id.detail_button);
         }
     }
 }

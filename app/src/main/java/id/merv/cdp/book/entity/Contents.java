@@ -15,6 +15,7 @@ public class Contents {
     @JsonProperty("content")
     private String description;
     private Image thumbnail;
+    private Categories category;
 
     public String getId() {
         return id;
@@ -46,5 +47,13 @@ public class Contents {
 
     public void setThumbnail(Image thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
     }
 }

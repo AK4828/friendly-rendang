@@ -1,19 +1,27 @@
 package id.merv.cdp.book.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import id.merv.cdp.book.MeruvianBookApplication;
+import id.merv.cdp.book.activity.BookViewActivity;
 import id.merv.cdp.book.entity.Book;
+import id.merv.cdp.book.entity.Document;
+
 import com.meruvian.dnabook.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -23,8 +31,8 @@ import java.util.List;
 public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHolder> {
 
     private Context context;
-    List<Book> bookList = new ArrayList<>();
     private ImageLoader imageLoader = ImageLoader.getInstance();
+    private List<Document> documents = new ArrayList<>();
 
     public BookGridAdapter(Context context) {
         this.context = context;
@@ -32,35 +40,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
-
-//        Book book = new Book();
-//
-//        book.setBookTitle("Sports");
-//        book.setBookThumbnail(R.drawable.ssssss);
-//        book.setBookDescription("IDR 50.000");
-//        bookList.add(book);
-//
-//        book.setBookTitle("Sports");
-//        book.setBookThumbnail(R.drawable.ssssss);
-//        book.setBookDescription("IDR 50.000");
-//        bookList.add(book);
-//
-//        book.setBookTitle("Sports");
-//        book.setBookThumbnail(R.drawable.ssssss);
-//        book.setBookDescription("IDR 50.000");
-//        bookList.add(book);
-//
-//        book.setBookTitle("Sports");
-//        book.setBookThumbnail(R.drawable.ssssss);
-//        book.setBookDescription("IDR 50.000");
-//        bookList.add(book);
-//
-//        book.setBookTitle("Sports");
-//        book.setBookThumbnail(R.drawable.ssssss);
-//        book.setBookDescription("IDR 50.000");
-//        bookList.add(book);
-
-
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -73,31 +52,41 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Book books = bookList.get(position);
-        holder.bookTitle.setText(books.getBookTitle());
-        holder.bookThumbnail.setImageResource(books.getBookThumbnail());
-        holder.bookPrice.setText(books.getBookDescription());
+        final Document document = documents.get(position);
+        holder.bookTitle.setText(document.getSubject());
+        String imageUrl = MeruvianBookApplication.SERVER_URL + "/api/attachments/" + document.getId() + "/preview";
+        imageLoader.displayImage(imageUrl, holder.bookThumbnail);
 
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, BookViewActivity.class);
+                intent.putExtra("attachmentsId", document.getDbId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
 
-        return bookList.size();
+        return documents.size();
+    }
+
+    public void addItem(Collection<Document> documents) {
+        this.documents.addAll(documents);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView bookTitle;
         public ImageView bookThumbnail;
-        public TextView bookPrice;
 
         public ViewHolder(View itemView) {
             super(itemView);
             bookTitle = (TextView) itemView.findViewById(R.id.card_title);
-            bookThumbnail = (ImageView) itemView.findViewById(R.id.card_image);
-            bookPrice = (TextView) itemView.findViewById(R.id.card_price);
+            bookThumbnail = (ImageView) itemView.findViewById(R.id.book_thumbnail);
         }
     }
 }

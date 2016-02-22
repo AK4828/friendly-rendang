@@ -22,11 +22,11 @@ public interface ContentService {
     @GET("/api/contents")
     Call<MainBody<Contents>>getContentsById(@QueryMap Map<String, String> id);
 
-    @GET("/api/contents/{id}/thumbnail")
-    Call<MainBody<Contents>>getContentsImage(@Path("id")String image);
-
     @GET("/api/contents/{id}/attachments")
-    Call<MainBody<Document>>getContentsAttachment(@Path("id")String id);
+    Call<MainBody<Document>>getContentsAttachment(@Path("id")String id, @QueryMap Map<String, String> limit);
+
+    @GET("/api/contents/{id}")
+    Call<Contents>getChoosedContentsById(@Path("id")String id);
 
 
 }

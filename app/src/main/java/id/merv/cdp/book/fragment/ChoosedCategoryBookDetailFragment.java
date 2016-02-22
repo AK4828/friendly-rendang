@@ -1,5 +1,6 @@
 package id.merv.cdp.book.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,8 +28,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import id.merv.cdp.book.MeruvianBookApplication;
+import id.merv.cdp.book.activity.BookViewActivity;
 import id.merv.cdp.book.adapter.BookListAdapter;
 import id.merv.cdp.book.entity.Attachments;
+import id.merv.cdp.book.entity.Categories;
 import id.merv.cdp.book.entity.Contents;
 import id.merv.cdp.book.entity.Document;
 import id.merv.cdp.book.entity.DocumentDao;
@@ -55,17 +58,13 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
     @Bind(R.id.downloading_progress) ProgressBar progressBar;
     RecyclerView.LayoutManager layoutManager;
     private BookListAdapter adapter;
-    private MainBody<Contents> mainBody;
+    private Contents content;
     private MainBody<Document> attachmentsMainBody;
-    private Document document;
-
-    public static ChoosedCategoryBookDetailFragment newInstance(String id, String attachmentsId, long documentId) {
+    public static ChoosedCategoryBookDetailFragment newInstance(String contentsId) {
         ChoosedCategoryBookDetailFragment fragment = new ChoosedCategoryBookDetailFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        fragment.getArguments().putString("id", id);
-        fragment.getArguments().putString("attachmentsId", attachmentsId);
-        fragment.getArguments().putLong("documentId", documentId);
+        fragment.getArguments().putString("contentsId", contentsId);
         return fragment;
     }
 
@@ -91,35 +90,30 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
         ButterKnife.bind(this, view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         layoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter = new BookListAdapter(getActivity(),getArguments().getLong("documentId")));
-
-        String id = getArguments().getString("id");
+        recyclerView.setAdapter(adapter = new BookListAdapter(getActivity()));
 
         MeruvianBookApplication app = MeruvianBookApplication.getInstance();
         ContentService service = app.getRetrofit().create(ContentService.class);
-        final String imageUrl = MeruvianBookApplication.SERVER_URL + "/api/contents/" + getArguments().getString("attachmentsId") + "/thumbnail";
+        final String imageUrl = MeruvianBookApplication.SERVER_URL + "/api/contents/" + getArguments().getString("contentsId") + "/thumbnail";
 
         try {
-            Map<String, String> param = new HashMap<>();
-            param.put("category", id);
-            Call<MainBody<Contents>> getContentsByCategory = service.getContentsById(param);
-            getContentsByCategory.enqueue(new Callback<MainBody<Contents>>() {
+            String contentsId = getArguments().getString("contentsId");
+            Call<Contents> getContentsById = service.getChoosedContentsById(contentsId);
+            getContentsById.enqueue(new Callback<Contents>() {
                 @Override
-                public void onResponse(Response<MainBody<Contents>> response, Retrofit retrofit) {
+                public void onResponse(Response<Contents> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
-                        mainBody = response.body();
-                        for (Contents s : mainBody.getContent()) {
-                            Contents contents = new Contents();
-                            contents.setTitle(s.getTitle());
-                            contenTitle.setText(s.getTitle());
-                            contenDescription.setText(Html.fromHtml(s.getDescription()));
+                        content = response.body();
 
-                            ImageLoader imageLoader = ImageLoader.getInstance();
-                            imageLoader.displayImage(imageUrl, categoryImage);
-                        }
+                        content.setTitle(content.getTitle());
+                        contenTitle.setText(content.getTitle());
+                        contenDescription.setText(Html.fromHtml(content.getDescription()));
+
+                        ImageLoader imageLoader = ImageLoader.getInstance();
+                        imageLoader.displayImage(imageUrl, categoryImage);
+
                     }
                 }
 
@@ -136,8 +130,11 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
 
 
         try {
-            String attachmentsId = getArguments().getString("attachmentsId");
-            Call<MainBody<Document>>getContentsAttachments = service.getContentsAttachment(attachmentsId);
+            String contentsId = getArguments().getString("contentsId");
+            String limitData = "100";
+            Map<String, String> limit = new HashMap<>();
+            limit.put("max", limitData);
+            Call<MainBody<Document>>getContentsAttachments = service.getContentsAttachment(contentsId, limit);
             getContentsAttachments.enqueue(new Callback<MainBody<Document>>() {
                 @Override
                 public void onResponse(Response<MainBody<Document>> response, Retrofit retrofit) {
@@ -145,8 +142,11 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
                         attachmentsMainBody = response.body();
 
                         for (Document d : attachmentsMainBody.getContent()) {
+                            Document document = new Document();
+                            document.setId(d.getId());
+                            document.setSubject(d.getDescription());
 
-                            adapter.addItem(d);
+                            adapter.addItem(document);
 
                         }
                         attachmentsMainBody.getTotalElements();
@@ -171,10 +171,21 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
             Toast.makeText(getActivity(), "Downloading...", Toast.LENGTH_LONG).show();
         }
         if (event.getStatus() == JobStatus.SUCCESS) {
-            long attachmentsId = getArguments().getLong("documentId");
-            FragmentUtils.replaceFragment(getFragmentManager(), BookViewFragment.newInstance(attachmentsId), true);
+            Intent intent = new Intent(getActivity(), BookViewActivity.class);
+            intent.putExtra("attachmentsId", event.getDbId());
+            startActivity(intent);
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        if (event.getStatus() == JobStatus.SYSTEM_ERROR) {
+            Toast.makeText(getActivity(), "Failure", Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        if (event.getStatus() == JobStatus.ABORTED) {
+            Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
-
-
 }

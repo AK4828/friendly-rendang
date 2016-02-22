@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,24 +29,16 @@ import id.merv.cdp.book.entity.MainBody;
  * Created by akm on 18/12/15.
  */
 public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInsideCategoryAdapter.ViewHolder> {
-
     private Context context;
-    private String id;
-    private long documentId;
-    private String attachmentsId;
     List<Contents> bookList = new ArrayList<Contents>();
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
-    public BooksInsideCategoryAdapter(Context context, String id, String attachmentsId, long documentId) {
-        this.attachmentsId = attachmentsId;
-        this.id = id;
-        this.documentId = documentId;
+    public BooksInsideCategoryAdapter(Context context) {
         this.context = context;
         if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,15 +52,14 @@ public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInside
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Contents contents = bookList.get(position);
         holder.bookTitle.setText(contents.getTitle());
-//        holder.bookThumbnail.setImageResource(R.drawable.no_image);
-        holder.detailButton.setOnClickListener(new OnClickListener() {
+        String imageUrl = MeruvianBookApplication.SERVER_URL + "/api/contents/" + contents.getId() + "/thumbnail";
+        imageLoader.displayImage(imageUrl, holder.bookThumbnail);
+
+        holder.itemView.setTag(contents.getId());
+        holder.itemView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                ((MainActivity) context).getFragment(id, attachmentsId, documentId);
-
-                Log.d("tes2", id);
-                Log.d("contents", attachmentsId);
+                ((MainActivity) context).getFragment((String) view.getTag());
             }
         });
 
@@ -75,7 +67,6 @@ public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInside
 
     @Override
     public int getItemCount() {
-
         return bookList.size();
     }
 
@@ -85,21 +76,13 @@ public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInside
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
         public TextView bookTitle;
         public ImageView bookThumbnail;
-        public TextView bookPrice;
-        public ImageView detailButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
             bookTitle = (TextView) itemView.findViewById(R.id.book_title);
-            detailButton = (ImageView) itemView.findViewById(R.id.detail_button);
             bookThumbnail = (ImageView) itemView.findViewById(R.id.book_thumbnail);
-            String imageUrl = MeruvianBookApplication.SERVER_URL + "/api/contents/" + attachmentsId + "/thumbnail";
-            ImageLoader imageLoader = ImageLoader.getInstance();
-            imageLoader.displayImage(imageUrl, bookThumbnail);
-            Log.d("cekServImage", imageUrl);
         }
     }
 }
