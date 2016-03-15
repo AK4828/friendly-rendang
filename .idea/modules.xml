@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Mbook.iml" filepath="$PROJECT_DIR$/Mbook.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dnabook.iml" filepath="$PROJECT_DIR$/dnabook.iml" />
       <module fileurl="file://$PROJECT_DIR$/entitygenerator2/entitygenerator2.iml" filepath="$PROJECT_DIR$/entitygenerator2/entitygenerator2.iml" />
     </modules>
   </component>

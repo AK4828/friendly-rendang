@@ -1,6 +1,7 @@
 package id.merv.cdp.book.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,12 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.path.android.jobqueue.JobManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import id.merv.cdp.book.MeruvianBookApplication;
+import id.merv.cdp.book.activity.CategoryChildActivity;
+import id.merv.cdp.book.activity.ContentsActivity;
 import id.merv.cdp.book.activity.MainActivity;
 import id.merv.cdp.book.entity.Contents;
 import id.merv.cdp.book.entity.MainBody;
@@ -29,6 +33,7 @@ import id.merv.cdp.book.entity.MainBody;
  * Created by akm on 18/12/15.
  */
 public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInsideCategoryAdapter.ViewHolder> {
+
     private Context context;
     List<Contents> bookList = new ArrayList<Contents>();
     private ImageLoader imageLoader = ImageLoader.getInstance();
@@ -59,7 +64,10 @@ public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInside
         holder.itemView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) context).getFragment((String) view.getTag());
+                Intent intent = new Intent(context, ContentsActivity.class);
+                intent.putExtra("contentId", (String)view.getTag());
+                context.startActivity(intent);
+//                ((CategoryChildActivity) context).getFragment((String) view.getTag());
             }
         });
 
@@ -72,6 +80,12 @@ public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInside
 
     public void addItem(Contents contents) {
         bookList.add(contents);
+        notifyDataSetChanged();
+    }
+
+    public void addItems(Collection<Contents> contentsList) {
+        Log.d("cek content list size", String.valueOf(contentsList.size()));
+        bookList.addAll(contentsList);
         notifyDataSetChanged();
     }
 

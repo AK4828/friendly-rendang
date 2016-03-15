@@ -2,23 +2,29 @@ package id.merv.cdp.book.fragment;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.meruvian.dnabook.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
+import butterknife.OnClick;
 import id.merv.cdp.book.MeruvianBookApplication;
 import id.merv.cdp.book.adapter.BookGridAdapter;
 
@@ -57,6 +63,7 @@ public class DownloadedBookFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadBooks();
+
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.path.android.jobqueue.JobManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import id.merv.cdp.book.MeruvianBookApplication;
@@ -59,6 +60,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 jobManager = MeruvianBookApplication.getInstance().getJobManager();
+                Log.d("Book id", documents.getId());
                 jobManager.addJobInBackground(AttahmentsDownloadJob.newInstance(documents.getId(), documents.getSubject()));
             }
         });
@@ -72,6 +74,11 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
     public void addItem(Document documents) {
         bookList.add(documents);
+        notifyDataSetChanged();
+    }
+
+    public void addItems(Collection<Document> documents) {
+        bookList.addAll(documents);
         notifyDataSetChanged();
     }
 

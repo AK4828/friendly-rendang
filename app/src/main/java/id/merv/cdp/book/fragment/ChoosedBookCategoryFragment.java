@@ -1,20 +1,17 @@
 package id.merv.cdp.book.fragment;
 
-import android.content.Entity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.meruvian.dnabook.R;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,8 +20,6 @@ import butterknife.ButterKnife;
 import id.merv.cdp.book.MeruvianBookApplication;
 import id.merv.cdp.book.adapter.BooksInsideCategoryAdapter;
 import id.merv.cdp.book.entity.Contents;
-import id.merv.cdp.book.entity.Document;
-import id.merv.cdp.book.entity.DocumentDao;
 import id.merv.cdp.book.entity.MainBody;
 import id.merv.cdp.book.service.ContentService;
 import retrofit.Call;

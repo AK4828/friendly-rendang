@@ -60,6 +60,7 @@ public class ChoosedCategoryBookDetailFragment extends Fragment {
     private BookListAdapter adapter;
     private Contents content;
     private MainBody<Document> attachmentsMainBody;
+
     public static ChoosedCategoryBookDetailFragment newInstance(String contentsId) {
         ChoosedCategoryBookDetailFragment fragment = new ChoosedCategoryBookDetailFragment();
         Bundle args = new Bundle();

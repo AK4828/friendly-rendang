@@ -38,7 +38,6 @@ import retrofit.Retrofit;
 public class AttahmentsDownloadJob extends Job {
 
     private String id;
-    private Document document;
     private long dbId;
     private String subject;
 
