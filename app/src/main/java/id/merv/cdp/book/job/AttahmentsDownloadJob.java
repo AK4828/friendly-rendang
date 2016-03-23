@@ -104,7 +104,7 @@ public class AttahmentsDownloadJob extends Job {
                 }
             });
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

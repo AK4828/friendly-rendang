@@ -60,7 +60,6 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 jobManager = MeruvianBookApplication.getInstance().getJobManager();
-                Log.d("Book id", documents.getId());
                 jobManager.addJobInBackground(AttahmentsDownloadJob.newInstance(documents.getId(), documents.getSubject()));
             }
         });

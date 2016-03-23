@@ -84,7 +84,6 @@ public class BooksInsideCategoryAdapter extends RecyclerView.Adapter<BooksInside
     }
 
     public void addItems(Collection<Contents> contentsList) {
-        Log.d("cek content list size", String.valueOf(contentsList.size()));
         bookList.addAll(contentsList);
         notifyDataSetChanged();
     }

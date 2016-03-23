@@ -11,9 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.joanzapata.iconify.widget.IconTextView;
 import com.meruvian.dnabook.R;
 import com.path.android.jobqueue.JobManager;
 
@@ -21,11 +19,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import id.merv.cdp.book.MeruvianBookApplication;
-import id.merv.cdp.book.adapter.BookListAdapter;
 import id.merv.cdp.book.adapter.BooksInsideCategoryAdapter;
 import id.merv.cdp.book.adapter.CategoryChipAdapter;
-import id.merv.cdp.book.fragment.ChoosedCategoryBookDetailFragment;
-import id.merv.cdp.book.fragment.FragmentUtils;
 import id.merv.cdp.book.job.CategoryChildJob;
 import id.merv.cdp.book.job.ContentJob;
 import id.merv.cdp.book.service.JobStatus;
@@ -109,7 +104,6 @@ public class CategoryChildActivity extends AppCompatActivity {
         if (event.getStatus() == JobStatus.ADDED) {
 
         } else if (event.getStatus() == JobStatus.SUCCESS) {
-            Log.d("cek content list size", String.valueOf(event.getContentsList().size()));
             emptyIndicator.setVisibility(View.GONE);
             categoryContentRecycler.setVisibility(View.VISIBLE);
             booksInsideCategoryAdapter.addItems(event.getContentsList());
@@ -117,9 +111,5 @@ public class CategoryChildActivity extends AppCompatActivity {
             emptyIndicator.setVisibility(View.VISIBLE);
         }
 
-    }
-
-    public void getFragment(String attachmentsId) {
-        FragmentUtils.replaceFragment(getSupportFragmentManager(), ChoosedCategoryBookDetailFragment.newInstance(attachmentsId), true);
     }
 }
