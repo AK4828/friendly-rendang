@@ -109,6 +109,7 @@ public class CategoryChildActivity extends AppCompatActivity {
             booksInsideCategoryAdapter.addItems(event.getContentsList());
         } else if (event.getStatus() == JobStatus.SYSTEM_ERROR) {
             emptyIndicator.setVisibility(View.VISIBLE);
+            categoryContentRecycler.setVisibility(View.GONE);
         }
 
     }

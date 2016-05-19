@@ -10,12 +10,9 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.pdf.PrintedPdfDocument;
-import android.support.design.widget.FloatingActionButton;
-import android.view.View;
 import android.widget.Toast;
 
 import com.itextpdf.text.pdf.PdfReader;
-import com.meruvian.dnabook.R;
 
 import java.io.File;
 import java.io.FileInputStream;
